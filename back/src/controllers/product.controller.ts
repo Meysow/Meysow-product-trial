@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { IProduct, Product } from "../models/product.model";
 
-// 🆕 [POST] Créer un produit
+// 🆕 [POST] Create a product
 export const createProduct = async (
   req: Request,
   res: Response
@@ -9,7 +9,7 @@ export const createProduct = async (
   try {
     const newProduct: IProduct = new Product(req.body);
     await newProduct.save();
-    res.status(201).json(newProduct); // ✅ On appelle res.json(), mais on ne le retourne pas
+    res.status(201).json(newProduct);
   } catch (error) {
     res
       .status(500)
@@ -17,7 +17,7 @@ export const createProduct = async (
   }
 };
 
-// 🔎 [GET] Récupérer tous les produits
+// 🔎 [GET] Getting All the products
 export const getProducts = async (
   _req: Request,
   res: Response
@@ -32,7 +32,7 @@ export const getProducts = async (
   }
 };
 
-// 🔍 [GET] Récupérer un produit par ID
+// 🔍 [GET] Getting a product according to its ID
 export const getProductById = async (
   req: Request,
   res: Response
@@ -51,7 +51,7 @@ export const getProductById = async (
   }
 };
 
-// ✏️ [PATCH] Mettre à jour un produit
+// ✏️ [PATCH] Update a product
 export const updateProduct = async (
   req: Request,
   res: Response
@@ -74,7 +74,7 @@ export const updateProduct = async (
   }
 };
 
-// ❌ [DELETE] Supprimer un produit
+// ❌ [DELETE] Delete a product
 export const deleteProduct = async (
   req: Request,
   res: Response

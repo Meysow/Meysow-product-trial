@@ -2,6 +2,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
+import authRoutes from "./routes/auth.routes";
 import productRoutes from "./routes/product.routes";
 
 dotenv.config();
@@ -12,7 +13,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// 🛠️ Routes
 app.use("/products", productRoutes);
+app.use("/auth", authRoutes);
 
 const MONGO_URI = process.env.MONGO_URI as string;
 if (!MONGO_URI) {
@@ -23,7 +26,7 @@ mongoose
   .connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  } as mongoose.ConnectOptions) // Type assertion pour indiquer que l'argument est de type ConnectOptions
+  } as mongoose.ConnectOptions) // Type assertion to specify the type of options
   .then(() => console.log("✅ MongoDB connecté"))
   .catch((err) => console.error("❌ Erreur de connexion MongoDB :", err));
 

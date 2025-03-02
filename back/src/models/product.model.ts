@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-// Définition de l'interface TypeScript pour un produit
 export interface IProduct extends Document {
   code: string;
   name: string;
@@ -17,7 +16,6 @@ export interface IProduct extends Document {
   updatedAt: Date;
 }
 
-// Schéma Mongoose
 const ProductSchema: Schema = new Schema(
   {
     code: { type: String, required: true, unique: true },

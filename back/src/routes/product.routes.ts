@@ -6,14 +6,15 @@ import {
   getProducts,
   updateProduct,
 } from "../controllers/product.controller";
+import { authenticateJWT } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 
-// Routes CRUD
-router.post("/", createProduct);
+// CRUD Routes
 router.get("/", getProducts);
 router.get("/:id", getProductById);
-router.patch("/:id", updateProduct);
-router.delete("/:id", deleteProduct);
+router.post("/", authenticateJWT, createProduct);
+router.patch("/:id", authenticateJWT, updateProduct);
+router.delete("/:id", authenticateJWT, deleteProduct);
 
 export default router;
