@@ -6,15 +6,17 @@ import {
   getProducts,
   updateProduct,
 } from "../controllers/product.controller";
-import { authenticateJWT } from "../middlewares/auth.middleware";
+import { authenticateJWT, isAdmin } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 
 // CRUD Routes
 router.get("/", getProducts);
 router.get("/:id", getProductById);
-router.post("/", authenticateJWT, createProduct);
-router.patch("/:id", authenticateJWT, updateProduct);
-router.delete("/:id", authenticateJWT, deleteProduct);
+
+// CRUD Routes protected (Admin)
+router.post("/", authenticateJWT, isAdmin, createProduct);
+router.patch("/:id", authenticateJWT, isAdmin, updateProduct);
+router.delete("/:id", authenticateJWT, isAdmin, deleteProduct);
 
 export default router;
