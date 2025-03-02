@@ -2,6 +2,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
+import productRoutes from "./routes/product.routes";
 
 dotenv.config();
 
@@ -10,6 +11,8 @@ const app = express();
 // 🛠️ Middleware
 app.use(express.json());
 app.use(cors());
+
+app.use("/products", productRoutes);
 
 const MONGO_URI = process.env.MONGO_URI as string;
 if (!MONGO_URI) {
