@@ -23,6 +23,11 @@ beforeAll(async () => {
 
   token = res.body.token;
 
+  // ✅ chekc if token is valid
+  if (!token) {
+    throw new Error("❌ Impossible d'obtenir un token valide.");
+  }
+
   // ✅ Create a product to test
   const productRes = await request(app)
     .post("/products")
@@ -41,43 +46,67 @@ beforeAll(async () => {
     });
 
   productId = productRes.body._id;
+
+  // ✅ check if product id is valid
+  if (!productId) {
+    throw new Error("❌ Impossible de créer un produit pour le panier.");
+  }
 });
 
 afterAll(async () => {
   await disconnectDB();
 });
 
-describe("💖 Gestion de la Wishlist", () => {
-  it("Ajouter un produit à la wishlist", async () => {
+describe("🛒 Gestion du Panier", () => {
+  it("Ajouter un produit au panier", async () => {
     const res = await request(app)
-      .post("/wishlist")
+      .post("/cart")
       .set("Authorization", `Bearer ${token}`)
-      .send({ productId });
+      .send({ productId, quantity: 2 });
+
+    console.log("✅ Réponse ajout panier:", res.body); // 🔍 DEBUG
 
     expect(res.status).toBe(200);
-    expect(res.body.products).toContain(productId);
+    expect(res.body.products).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ productId, quantity: 2 }),
+      ])
+    );
   });
 
-  it("Ne doit pas ajouter un produit inexistant à la wishlist", async () => {
+  it("Ne doit pas ajouter un produit inexistant au panier", async () => {
     const res = await request(app)
-      .post("/wishlist")
+      .post("/cart")
       .set("Authorization", `Bearer ${token}`)
-      .send({ productId: "123456789abcdef123456789" });
+      .send({ productId: "123456789abcdef123456789", quantity: 1 });
 
     expect(res.status).toBe(404);
     expect(res.body.message).toBe("Produit introuvable.");
   });
 
-  it("Supprimer un produit de la wishlist", async () => {
-    // ✅ wait for the wishlist to be updated
+  it("Récupérer le panier de l'utilisateur", async () => {
+    const res = await request(app)
+      .get("/cart")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.products.length).toBeGreaterThan(0);
+  });
+
+  it("Supprimer un produit du panier", async () => {
+    // ✅ wait for the cart to be updated
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const res = await request(app)
-      .delete("/wishlist")
+      .delete("/cart")
       .set("Authorization", `Bearer ${token}`)
       .send({ productId });
 
+    console.log("✅ Réponse suppression panier:", res.body); // 🔍 DEBUG
+
     expect(res.status).toBe(200);
-    expect(res.body.wishlist.products).not.toContain(productId);
+    expect(res.body.products).not.toContain(
+      expect.objectContaining({ productId })
+    );
   });
 });
