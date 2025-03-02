@@ -22,10 +22,24 @@ export const addToCart = async (req: Request, res: Response): Promise<void> => {
     const userId = (req as any).user.userId;
     const { productId, quantity } = req.body;
 
+    if (!productId || quantity <= 0) {
+      res
+        .status(400)
+        .json({ message: "Le produit et la quantité sont obligatoires." });
+      return;
+    }
+
+    // ✅ check if the product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      res.status(404).json({ message: "Produit introuvable." });
+      return;
+    }
+
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
-      cart = new Cart({ userId, products: [] });
+      cart = new Cart({ userId, products: [], total: 0 });
     }
 
     const productIndex = cart.products.findIndex(
@@ -39,6 +53,7 @@ export const addToCart = async (req: Request, res: Response): Promise<void> => {
 
     cart.total = await calculateTotal(cart);
     await cart.save();
+
     res.status(200).json(cart);
   } catch (error) {
     res

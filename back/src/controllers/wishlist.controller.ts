@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Product } from "../models/product.model";
 import { Wishlist } from "../models/wishlist.model";
 
 // 🆕 [POST] Add a product to the wishlist
@@ -11,7 +12,14 @@ export const addToWishlist = async (
     const { productId } = req.body;
 
     if (!productId) {
-      res.status(400).json({ message: "Le champ productId est obligatoire." });
+      res.status(400).json({ message: "Le produit est obligatoire." });
+      return;
+    }
+
+    // ✅ check if the product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      res.status(404).json({ message: "Produit introuvable." });
       return;
     }
 
@@ -33,7 +41,6 @@ export const addToWishlist = async (
       .json({ message: "Erreur lors de l'ajout à la wishlist", error });
   }
 };
-
 // ❌ [DELETE] Delete item from the wishlist
 export const removeFromWishlist = async (
   req: Request,
