@@ -1,5 +1,18 @@
 import { Request, Response } from "express";
-import { Cart } from "../models/cart.model";
+import { Cart, ICart } from "../models/cart.model";
+import { Product } from "../models/product.model";
+
+// ✅ Function to calculate the total
+const calculateTotal = async (cart: ICart): Promise<number> => {
+  let total = 0;
+  for (const item of cart.products) {
+    const product = await Product.findById(item.productId);
+    if (product) {
+      total += product.price * item.quantity;
+    }
+  }
+  return total;
+};
 
 // 🆕 [POST] Add a product to the cart
 export const addToCart = async (req: Request, res: Response): Promise<void> => {
@@ -22,6 +35,7 @@ export const addToCart = async (req: Request, res: Response): Promise<void> => {
       cart.products.push({ productId, quantity });
     }
 
+    cart.total = await calculateTotal(cart);
     await cart.save();
     res.status(200).json(cart);
   } catch (error) {
@@ -66,6 +80,8 @@ export const removeFromCart = async (
     }
 
     cart.products = cart.products.filter((p) => p.productId !== productId);
+
+    cart.total = await calculateTotal(cart);
     await cart.save();
 
     res.status(200).json(cart);
