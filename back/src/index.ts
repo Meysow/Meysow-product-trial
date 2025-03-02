@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/auth.routes";
 import cartRoutes from "./routes/cart.routes";
 import productRoutes from "./routes/product.routes";
+import wishlistRoutes from "./routes/wishlist.routes";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(cors());
 app.use("/products", productRoutes);
 app.use("/auth", authRoutes);
 app.use("/cart", cartRoutes);
+app.use("/wishlist", wishlistRoutes);
 
 const MONGO_URI = process.env.MONGO_URI as string;
 if (!MONGO_URI) {

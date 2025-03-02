@@ -2,15 +2,17 @@ import { Request, Response } from "express";
 import { Cart, ICart } from "../models/cart.model";
 import { Product } from "../models/product.model";
 
-// ✅ Function to calculate the total
+// ✅ Function to calculate the total cost of the cart
 const calculateTotal = async (cart: ICart): Promise<number> => {
   let total = 0;
+
   for (const item of cart.products) {
     const product = await Product.findById(item.productId);
-    if (product) {
+    if (product && product.price) {
       total += product.price * item.quantity;
     }
   }
+
   return total;
 };
 
