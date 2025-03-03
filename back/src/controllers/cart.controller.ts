@@ -81,6 +81,43 @@ export const getCart = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// ✏️ [PATCH] Update the quantity of a product in the cart
+export const updateQuantity = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const userId = (req as any).user.userId;
+    const { productId, quantity } = req.body;
+
+    const cart = await Cart.findOne({ userId });
+    if (!cart) {
+      res.status(404).json({ message: "Panier introuvable" });
+      return;
+    }
+
+    const productIndex = cart.products.findIndex(
+      (p) => p.productId === productId
+    );
+    if (productIndex === -1) {
+      // Product not found in the cart
+      res.status(404).json({ message: "Produit introuvable dans le panier" });
+      return;
+    }
+
+    cart.products[productIndex].quantity = quantity;
+
+    cart.total = await calculateTotal(cart);
+    await cart.save();
+
+    res.status(200).json(cart);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la mise à jour de la quantité", error });
+  }
+};
+
 // ❌ [DELETE] Delete item from the cart
 export const removeFromCart = async (
   req: Request,
