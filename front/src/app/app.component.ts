@@ -1,9 +1,8 @@
-import {
-  Component,
-} from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { SplitterModule } from 'primeng/splitter';
-import { ToolbarModule } from 'primeng/toolbar';
+import { SplitterModule } from "primeng/splitter";
+import { ToolbarModule } from "primeng/toolbar";
+import { CartService } from "./cart/data-access/cart.service";
 import { PanelMenuComponent } from "./shared/ui/panel-menu/panel-menu.component";
 
 @Component({
@@ -15,4 +14,6 @@ import { PanelMenuComponent } from "./shared/ui/panel-menu/panel-menu.component"
 })
 export class AppComponent {
   title = "ALTEN SHOP";
+  public readonly cartService = inject(CartService); // ✅ Injection du service du panier
+  public readonly cart = this.cartService.cart; // ✅ Expose `cart` pour le template
 }

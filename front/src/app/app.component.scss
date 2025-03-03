@@ -1,4 +1,43 @@
 .app-content {
-    overflow: hidden;
-    height: 100%;
+  overflow: hidden;
+  height: 100%;
+}
+
+.cart-container {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.cart-icon {
+  font-size: 2rem;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.cart-icon:hover {
+  color: #007bff;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background-color: #ff1100;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 5px 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  animation: bounce 0.5s ease infinite alternate;
+}
+
+@keyframes bounce {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.07);
+  }
 }

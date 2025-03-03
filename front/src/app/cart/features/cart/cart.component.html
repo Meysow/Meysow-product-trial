@@ -1,0 +1,53 @@
+<h2 class="cart-title">🛒 Votre Panier</h2>
+
+@if (cart().length > 0) {
+<div class="cart-container">
+  <div class="cart-list">
+    @for (item of cart(); track item.id) {
+    <div class="cart-item">
+      <img
+        [src]="'assets/images/placeholder.png'"
+        [alt]="item.name"
+        class="cart-image"
+      />
+      <div class="cart-details">
+        <h3>{{ item.name }}</h3>
+        <p class="cart-price">{{ item.quantity }} x {{ item.price }}€</p>
+      </div>
+
+      <div class="quantity-controls">
+        <p-button
+          class="qty-button"
+          icon="pi pi-minus"
+          (click)="onDecreaseQuantity(item.id)"
+        />
+        <span class="quantity-display">{{ item.quantity }}</span>
+        <p-button
+          class="qty-button"
+          icon="pi pi-plus"
+          (click)="onIncreaseQuantity(item.id)"
+        />
+      </div>
+
+      <p-button
+        icon="pi pi-trash"
+        severity="danger"
+        class="cart-remove"
+        (click)="onRemove(item.id)"
+      />
+    </div>
+    }
+  </div>
+
+  <div class="cart-clear-container">
+    <p-button
+      label="🗑️ Vider le Panier"
+      severity="warning"
+      class="cart-clear"
+      (click)="onClearCart()"
+    />
+  </div>
+</div>
+} @else {
+<p class="cart-empty">Votre panier est vide.</p>
+}

@@ -1,31 +1,70 @@
-<h1 class="text-center">Liste des produits</h1>
+<h1 class="text-center">🛍️ Liste des Produits</h1>
 
-<p-button label="Créer produit" (onClick)="onCreate()" class="block text-center"/>
+<!-- 🔍 Filtrage des produits par catégorie -->
+<div class="filter-container">
+  <p-dropdown
+    [options]="categories()"
+    [ngModel]="selectedCategory()"
+    (ngModelChange)="onCategoryChange($event)"
+    placeholder="Filtrer par catégorie"
+  >
+  </p-dropdown>
+</div>
 
-<p-dataView #dv [value]="products()">
-    <ng-template pTemplate="list" let-products>
-        @for (product of products; track product) {
-            <p-card class="block mb-2">
-                <span class="font-medium text-secondary text-sm">{{ product.category }}</span>
-                <div class="text-lg font-medium text-900 mt-2">{{ product.name }}</div>
-
-                <ng-template pTemplate="footer">
-                    <div class="flex gap-3 mt-1">
-                        <p-button label="Modifier" severity="secondary" (onClick)="onUpdate(product)"/>
-                        <p-button label="Supprimer" severity="danger" (onClick)="onDelete(product)" />
-                    </div>
-                </ng-template>
-            </p-card>
-        }
-    </ng-template>
-</p-dataView>
-
-<p-dialog [(visible)]="isDialogVisible"
-    [style]="{ width: '50vw' }"
-    header="Ajout/Edition produit">
-    <app-product-form
-        [product]="editedProduct()"
-        (save)="onSave($event)"
-        (cancel)="onCancel()"
+<!-- 🔳 Grille des produits -->
+<div class="product-grid">
+  @for (product of filteredProducts(); track product.id) {
+  <p-card class="product-card">
+    <img
+      [src]="'assets/images/placeholder.png'"
+      [alt]="product.name"
+      class="product-image"
     />
-</p-dialog>
+    <span class="category">{{ product.category }}</span>
+    <div class="product-title">{{ product.name }}</div>
+    <p class="product-price">{{ product.price }}€</p>
+
+    <!-- 🔴 Indicateur de stock -->
+    <p
+      class="stock-status"
+      [ngClass]="{
+        'in-stock': product.inventoryStatus === 'INSTOCK',
+        'low-stock': product.inventoryStatus === 'LOWSTOCK',
+        'out-of-stock': product.inventoryStatus === 'OUTOFSTOCK'
+      }"
+    >
+      {{ getStockLabel(product.inventoryStatus) }}
+    </p>
+
+    <!-- 🛒 Contrôle de quantité -->
+    <div class="quantity-controls">
+      <p-button icon="pi pi-minus" (click)="onDecreaseQuantity(product)" />
+      <span class="quantity-display">
+        {{ quantitiesToAdd()[product.id] || 1 }}
+      </span>
+      <p-button icon="pi pi-plus" (click)="onIncreaseQuantity(product)" />
+    </div>
+
+    <!-- 🛒 Bouton d'ajout avec désactivation si OUTOFSTOCK -->
+    <ng-template pTemplate="footer">
+      <p-button
+        label="🛒 Ajouter au panier"
+        (click)="onAddToCart(product)"
+        [disabled]="product.inventoryStatus === 'OUTOFSTOCK'"
+      />
+    </ng-template>
+  </p-card>
+  }
+</div>
+
+<!-- 📄 Pagination -->
+<p-paginator
+  [rows]="itemsPerPage()"
+  [totalRecords]="totalRecords()"
+  [showJumpToPageDropdown]="false"
+  [showFirstLastIcon]="true"
+  [alwaysShow]="false"
+  (onPageChange)="onPageChange($event)"
+  [showPageLinks]="true"
+>
+</p-paginator>

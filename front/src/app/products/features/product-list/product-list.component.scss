@@ -1,5 +1,93 @@
 :host {
-    display: block;
-    height: 100%;
-    overflow: auto;
+  display: block;
+  height: 100%;
+  overflow: auto;
 }
+
+.filter-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+/* ✅ Grille Adaptative */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
+  max-width: calc(3 * 320px); /* ✅ Limite la grille à 3 colonnes max */
+  margin: auto; /* ✅ Centre la grille */
+  gap: 20px;
+  padding: 20px;
+}
+
+.product-card {
+  text-align: center;
+}
+
+.product-image {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.product-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2; /* ✅ Max 2 lignes */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 3.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.product-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+p-paginator {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.quantity-display {
+  min-width: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.stock-status {
+  font-weight: bold;
+  text-align: center;
+  margin-top: 5px;
+  padding: 5px;
+  border-radius: 4px;
+  display: inline-block;
+  width: 100%;
+}
+
+// .in-stock {
+//   color: green;
+// }
+
+// .low-stock {
+//   color: orange;
+// }
+
+// .out-of-stock {
+//   color: red;
+// }
